@@ -12,4 +12,11 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Customer\" />
+    <Folder Include="Views\Franchiseholder\" />
+    <Folder Include="Views\Owner\" />
+    <Folder Include="Views\Prelogin\" />
+  </ItemGroup>
+
 </Project>
