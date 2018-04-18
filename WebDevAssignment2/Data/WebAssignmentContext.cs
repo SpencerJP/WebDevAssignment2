@@ -9,13 +9,15 @@ namespace WebDevAssignment2.Data
 {
     public class WebAssignmentContext : DbContext
     {
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Store> Stores { get; set; }
-        public DbSet<OwnerInventory> OwnerInventory { get; set; }
-        public DbSet<StockRequest> StockRequests { get; set; }
 
         public WebAssignmentContext(DbContextOptions<WebAssignmentContext> options) : base(options)
         { }
+
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Store> Store { get; set; }
+        public DbSet<OwnerInventory> OwnerInventory { get; set; }
+        public DbSet<StockRequest> StockRequest { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

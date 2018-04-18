@@ -16,10 +16,10 @@ namespace WebDevAssignment2.Data
                 serviceProvider.GetRequiredService<DbContextOptions<WebAssignmentContext>>()))
             {
                 // Look for any products.
-                if (context.Products.Any())
+                 /* if (context.Product.Any())
                 {
                     return; // DB has been seeded.
-                }
+                } */
 
                 var products = new[]
                 {
@@ -65,7 +65,7 @@ namespace WebDevAssignment2.Data
                     }
                 };
 
-                context.Products.AddRange(products);
+                context.Product.AddRange(products);
 
                 var i = 0;
                 context.OwnerInventory.AddRange(
@@ -223,7 +223,7 @@ namespace WebDevAssignment2.Data
                     }
                 };
 
-                context.Stores.AddRange(stores);
+                context.Store.AddRange(stores);
 
                 context.SaveChanges();
             }

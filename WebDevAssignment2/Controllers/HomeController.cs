@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebDevAssignment2.Data;
@@ -37,7 +38,8 @@ namespace WebDevAssignment2.Controllers
 
             return View();
         }
-
+         
+        [Authorize]
         public async Task<IActionResult> OwnerInventoryTest(string productName)
         {
             // Eager loading the Product table - join between OwnerInventory and the Product table.
