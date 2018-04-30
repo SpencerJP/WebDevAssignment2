@@ -150,6 +150,57 @@ namespace ASPNETAssignment.Controllers
 
             return View(stockRequest);
         }
+        // GET: StockRequests/Delete/5
+        public async Task<IActionResult> ProcessStockRequest(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            ViewData["CanProcess"] = "You cannot process this request, not enough stock in the owner inventory.";
+            var stockRequest = await _context.StockRequest
+                .Include(s => s.Product)
+                .Include(s => s.Store)
+                .SingleOrDefaultAsync(m => m.StockRequestID == id);
+            var ownerInventory = await _context.OwnerInventory
+                .Include(s => s.Product)
+                .SingleOrDefaultAsync(m => m.ProductID == stockRequest.ProductID);
+            if (stockRequest == null)
+            {
+                return NotFound();
+            }
+            if (stockRequest.Quantity <= ownerInventory.StockLevel)
+            {
+                ViewData["CanProcess"] = "Process a stock request.";
+            }
+            return View(stockRequest);
+        }
+
+        // POST: StockRequests/Delete/5
+        [HttpPost, ActionName("ProcessStockRequest")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProcessStockRequestConfirmed(int id)
+        {
+
+            var stockRequest = await _context.StockRequest.SingleOrDefaultAsync(m => m.StockRequestID == id);
+            var ownerInventory = await _context.OwnerInventory
+                .Include(s => s.Product)
+                .SingleOrDefaultAsync(m => m.ProductID == stockRequest.ProductID);
+            var storeInventory = await _context.StoreInventory
+                .SingleOrDefaultAsync(m => m.ProductID == stockRequest.ProductID && m.StoreID == stockRequest.StoreID);
+            if (stockRequest.Quantity <= ownerInventory.StockLevel)
+            {
+                ownerInventory.StockLevel = ownerInventory.StockLevel - stockRequest.Quantity; // remove quantity from owner's stocklevel
+                storeInventory.StockLevel = storeInventory.StockLevel + stockRequest.Quantity; // give that quantity to the store
+                _context.StockRequest.Remove(stockRequest); // delete stock request
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return NotFound(); // remove this, for now just leave it but return a proper error message
+            }
+        }
 
         // POST: StockRequests/Delete/5
         [HttpPost, ActionName("Delete")]
