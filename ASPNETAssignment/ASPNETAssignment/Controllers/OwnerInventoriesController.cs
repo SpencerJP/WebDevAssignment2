@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ASPNETAssignment.Data;
-using WebDevAssignment2.Models;
 using Microsoft.AspNetCore.Authorization;
+using ASPNETAssignment.Models;
 
 namespace ASPNETAssignment.Controllers
 {

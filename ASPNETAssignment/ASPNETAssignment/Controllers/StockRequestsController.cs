@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ASPNETAssignment.Data;
-using WebDevAssignment2.Models;
 using Microsoft.AspNetCore.Authorization;
+using ASPNETAssignment.Models;
 
 namespace ASPNETAssignment.Controllers
 {
@@ -186,12 +186,16 @@ namespace ASPNETAssignment.Controllers
             var ownerInventory = await _context.OwnerInventory
                 .Include(s => s.Product)
                 .SingleOrDefaultAsync(m => m.ProductID == stockRequest.ProductID);
-            var storeInventory = await _context.StoreInventory
-                .SingleOrDefaultAsync(m => m.ProductID == stockRequest.ProductID && m.StoreID == stockRequest.StoreID);
+            var store = await _context.Store
+                .SingleOrDefaultAsync(m => m.StoreID == stockRequest.StoreID);
+
+            var storeInventory = store.StoreInventory;
+
             if (stockRequest.Quantity <= ownerInventory.StockLevel)
             {
                 ownerInventory.StockLevel = ownerInventory.StockLevel - stockRequest.Quantity; // remove quantity from owner's stocklevel
-                storeInventory.StockLevel = storeInventory.StockLevel + stockRequest.Quantity; // give that quantity to the store
+                var productStockLevelInStore = (from a in storeInventory where stockRequest.ProductID == a.ProductID select a).Single();
+                productStockLevelInStore.StockLevel = productStockLevelInStore.StockLevel + stockRequest.Quantity; // give that quantity to the store
                 _context.StockRequest.Remove(stockRequest); // delete stock request
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

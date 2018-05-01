@@ -20,7 +20,7 @@ namespace ASPNETAssignment.Data.Migrations
                 .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("WebDevAssignment2.Models.OwnerInventory", b =>
+            modelBuilder.Entity("ASPNETAssignment.Models.OwnerInventory", b =>
                 {
                     b.Property<int>("ProductID");
 
@@ -31,7 +31,7 @@ namespace ASPNETAssignment.Data.Migrations
                     b.ToTable("OwnerInventory");
                 });
 
-            modelBuilder.Entity("WebDevAssignment2.Models.Product", b =>
+            modelBuilder.Entity("ASPNETAssignment.Models.Product", b =>
                 {
                     b.Property<int>("ProductID")
                         .ValueGeneratedOnAdd();
@@ -45,7 +45,7 @@ namespace ASPNETAssignment.Data.Migrations
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("WebDevAssignment2.Models.StockRequest", b =>
+            modelBuilder.Entity("ASPNETAssignment.Models.StockRequest", b =>
                 {
                     b.Property<int>("StockRequestID")
                         .ValueGeneratedOnAdd();
@@ -65,7 +65,7 @@ namespace ASPNETAssignment.Data.Migrations
                     b.ToTable("StockRequest");
                 });
 
-            modelBuilder.Entity("WebDevAssignment2.Models.Store", b =>
+            modelBuilder.Entity("ASPNETAssignment.Models.Store", b =>
                 {
                     b.Property<int>("StoreID")
                         .ValueGeneratedOnAdd();
@@ -77,7 +77,7 @@ namespace ASPNETAssignment.Data.Migrations
                     b.ToTable("Store");
                 });
 
-            modelBuilder.Entity("WebDevAssignment2.Models.StoreInventory", b =>
+            modelBuilder.Entity("ASPNETAssignment.Models.StoreInventory", b =>
                 {
                     b.Property<int>("StoreID");
 
@@ -92,35 +92,35 @@ namespace ASPNETAssignment.Data.Migrations
                     b.ToTable("StoreInventory");
                 });
 
-            modelBuilder.Entity("WebDevAssignment2.Models.OwnerInventory", b =>
+            modelBuilder.Entity("ASPNETAssignment.Models.OwnerInventory", b =>
                 {
-                    b.HasOne("WebDevAssignment2.Models.Product", "Product")
+                    b.HasOne("ASPNETAssignment.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("WebDevAssignment2.Models.StockRequest", b =>
+            modelBuilder.Entity("ASPNETAssignment.Models.StockRequest", b =>
                 {
-                    b.HasOne("WebDevAssignment2.Models.Product", "Product")
+                    b.HasOne("ASPNETAssignment.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("WebDevAssignment2.Models.Store", "Store")
+                    b.HasOne("ASPNETAssignment.Models.Store", "Store")
                         .WithMany()
                         .HasForeignKey("StoreID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("WebDevAssignment2.Models.StoreInventory", b =>
+            modelBuilder.Entity("ASPNETAssignment.Models.StoreInventory", b =>
                 {
-                    b.HasOne("WebDevAssignment2.Models.Product", "Product")
+                    b.HasOne("ASPNETAssignment.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("WebDevAssignment2.Models.Store", "Store")
+                    b.HasOne("ASPNETAssignment.Models.Store", "Store")
                         .WithMany("StoreInventory")
                         .HasForeignKey("StoreID")
                         .OnDelete(DeleteBehavior.Cascade);
