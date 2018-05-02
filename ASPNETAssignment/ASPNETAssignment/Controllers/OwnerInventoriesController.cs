@@ -6,17 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ASPNETAssignment.Data;
-using WebDevAssignment2.Models;
 using Microsoft.AspNetCore.Authorization;
+using ASPNETAssignment.Models;
 
 namespace ASPNETAssignment.Controllers
 {
     [Authorize]
     public class OwnerInventoriesController : Controller
     {
-        private readonly ASPNetAssignmentContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public OwnerInventoriesController(ASPNetAssignmentContext context)
+        public OwnerInventoriesController(ApplicationDbContext context)
         {
             _context = context;
         }

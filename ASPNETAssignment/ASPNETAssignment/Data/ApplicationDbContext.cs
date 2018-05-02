@@ -12,15 +12,20 @@ namespace ASPNETAssignment.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
+        { }
+            public DbSet<Product> Product { get; set; }
+            public DbSet<Store> Store { get; set; }
+            public DbSet<OwnerInventory> OwnerInventory { get; set; }
+            public DbSet<StockRequest> StockRequest { get; set; }
+            public DbSet<ShoppingCart> ShoppingCart { get; set; }
+            public DbSet<Item> Item { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<StoreInventory>().HasKey(x => new { x.StoreID, x.ProductID });
+
+            base.OnModelCreating(modelBuilder);
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
-        }
     }
 }

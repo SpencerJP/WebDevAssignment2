@@ -6,17 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ASPNETAssignment.Data;
-using WebDevAssignment2.Models;
 using Microsoft.AspNetCore.Authorization;
+using ASPNETAssignment.Models;
 
 namespace ASPNETAssignment.Controllers
 {
     [Authorize]
     public class StockRequestsController : Controller
     {
-        private readonly ASPNetAssignmentContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public StockRequestsController(ASPNetAssignmentContext context)
+        public StockRequestsController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -181,7 +181,7 @@ namespace ASPNETAssignment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ProcessStockRequestConfirmed(int id)
         {
-
+            /*
             var stockRequest = await _context.StockRequest.SingleOrDefaultAsync(m => m.StockRequestID == id);
             var ownerInventory = await _context.OwnerInventory
                 .Include(s => s.Product)
@@ -199,7 +199,8 @@ namespace ASPNETAssignment.Controllers
             else
             {
                 return NotFound(); // remove this, for now just leave it but return a proper error message
-            }
+            } */
+            return NotFound();
         }
 
         // POST: StockRequests/Delete/5

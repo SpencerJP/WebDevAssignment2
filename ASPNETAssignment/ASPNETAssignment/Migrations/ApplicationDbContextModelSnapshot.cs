@@ -11,10 +11,9 @@ using System;
 namespace ASPNETAssignment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180418070136_initial")]
-    partial class initial
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,6 +53,10 @@ namespace ASPNETAssignment.Migrations
 
                     b.Property<string>("SecurityStamp");
 
+                    b.Property<int?>("ShoppingCartID");
+
+                    b.Property<int?>("StoreID");
+
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
@@ -69,7 +72,115 @@ namespace ASPNETAssignment.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("ShoppingCartID")
+                        .IsUnique()
+                        .HasFilter("[ShoppingCartID] IS NOT NULL");
+
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.Item", b =>
+                {
+                    b.Property<int>("ItemID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<int?>("ShoppingCartID");
+
+                    b.Property<int?>("StoreInventoryProductID");
+
+                    b.Property<int?>("StoreInventoryStoreID");
+
+                    b.HasKey("ItemID");
+
+                    b.HasIndex("ShoppingCartID");
+
+                    b.HasIndex("StoreInventoryStoreID", "StoreInventoryProductID");
+
+                    b.ToTable("Item");
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.OwnerInventory", b =>
+                {
+                    b.Property<int>("ProductID");
+
+                    b.Property<int>("StockLevel");
+
+                    b.HasKey("ProductID");
+
+                    b.ToTable("OwnerInventory");
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.Product", b =>
+                {
+                    b.Property<int>("ProductID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<decimal>("Price");
+
+                    b.HasKey("ProductID");
+
+                    b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.ShoppingCart", b =>
+                {
+                    b.Property<int>("ShoppingCartID")
+                        .ValueGeneratedOnAdd();
+
+                    b.HasKey("ShoppingCartID");
+
+                    b.ToTable("ShoppingCart");
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.StockRequest", b =>
+                {
+                    b.Property<int>("StockRequestID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ProductID");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<int>("StoreID");
+
+                    b.HasKey("StockRequestID");
+
+                    b.HasIndex("ProductID");
+
+                    b.HasIndex("StoreID");
+
+                    b.ToTable("StockRequest");
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.Store", b =>
+                {
+                    b.Property<int>("StoreID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("StoreID");
+
+                    b.ToTable("Store");
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.StoreInventory", b =>
+                {
+                    b.Property<int>("StoreID");
+
+                    b.Property<int>("ProductID");
+
+                    b.Property<int>("StockLevel");
+
+                    b.HasKey("StoreID", "ProductID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("StoreInventory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -178,6 +289,58 @@ namespace ASPNETAssignment.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("ASPNETAssignment.Models.ShoppingCart")
+                        .WithOne("ApplicationUser")
+                        .HasForeignKey("ASPNETAssignment.Models.ApplicationUser", "ShoppingCartID");
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.Item", b =>
+                {
+                    b.HasOne("ASPNETAssignment.Models.ShoppingCart")
+                        .WithMany("Item")
+                        .HasForeignKey("ShoppingCartID");
+
+                    b.HasOne("ASPNETAssignment.Models.StoreInventory", "StoreInventory")
+                        .WithMany()
+                        .HasForeignKey("StoreInventoryStoreID", "StoreInventoryProductID");
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.OwnerInventory", b =>
+                {
+                    b.HasOne("ASPNETAssignment.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.StockRequest", b =>
+                {
+                    b.HasOne("ASPNETAssignment.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ASPNETAssignment.Models.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.StoreInventory", b =>
+                {
+                    b.HasOne("ASPNETAssignment.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ASPNETAssignment.Models.Store", "Store")
+                        .WithMany("StoreInventory")
+                        .HasForeignKey("StoreID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

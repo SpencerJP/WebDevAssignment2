@@ -6,15 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ASPNETAssignment.Data;
-using WebDevAssignment2.Models;
+using ASPNETAssignment.Models;
 
 namespace ASPNETAssignment.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly ASPNetAssignmentContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public ProductsController(ASPNetAssignmentContext context)
+        public ProductsController(ApplicationDbContext context)
         {
             _context = context;
         }

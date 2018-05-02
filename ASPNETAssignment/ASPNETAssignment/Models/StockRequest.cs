@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebDevAssignment2.Models
+namespace ASPNETAssignment.Models
 {
     public class StockRequest
     {
