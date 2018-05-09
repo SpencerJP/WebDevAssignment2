@@ -12,11 +12,11 @@ using ASPNETAssignment.Models;
 namespace ASPNETAssignment.Controllers
 {
     [Authorize]
-    public class StockRequestsController : Controller
+    public class ProcessStockRequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public StockRequestsController(ApplicationDbContext context)
+        public ProcessStockRequestsController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -24,7 +24,10 @@ namespace ASPNETAssignment.Controllers
         // GET: StockRequests
         public async Task<IActionResult> Index()
         {
-            var aSPNetAssignmentContext = _context.StockRequest.Include(s => s.Product).Include(s => s.Store);
+            var aSPNetAssignmentContext = (from stockRequests in _context.StockRequest.Include(s => s.Product).Include(s => s.Store)
+                                           join ownerInventory in _context.OwnerInventory
+                                           on stockRequests.ProductID equals ownerInventory.ProductID
+                                           select new StockRequestViewModel(stockRequests, ownerInventory));
             return View(await aSPNetAssignmentContext.ToListAsync());
         }
 
@@ -181,17 +184,16 @@ namespace ASPNETAssignment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ProcessStockRequestConfirmed(int id)
         {
-            /*
             var stockRequest = await _context.StockRequest.SingleOrDefaultAsync(m => m.StockRequestID == id);
             var ownerInventory = await _context.OwnerInventory
                 .Include(s => s.Product)
                 .SingleOrDefaultAsync(m => m.ProductID == stockRequest.ProductID);
-            var storeInventory = await _context.StoreInventory
-                .SingleOrDefaultAsync(m => m.ProductID == stockRequest.ProductID && m.StoreID == stockRequest.StoreID);
+            var storeStock = await _context.StoreInventory
+                .SingleOrDefaultAsync(m => (m.StoreID == stockRequest.StoreID && m.ProductID == stockRequest.ProductID));
             if (stockRequest.Quantity <= ownerInventory.StockLevel)
             {
                 ownerInventory.StockLevel = ownerInventory.StockLevel - stockRequest.Quantity; // remove quantity from owner's stocklevel
-                storeInventory.StockLevel = storeInventory.StockLevel + stockRequest.Quantity; // give that quantity to the store
+                storeStock.StockLevel = storeStock.StockLevel + stockRequest.Quantity; // give that quantity to the store
                 _context.StockRequest.Remove(stockRequest); // delete stock request
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -199,8 +201,7 @@ namespace ASPNETAssignment.Controllers
             else
             {
                 return NotFound(); // remove this, for now just leave it but return a proper error message
-            } */
-            return NotFound();
+            }
         }
 
         // POST: StockRequests/Delete/5

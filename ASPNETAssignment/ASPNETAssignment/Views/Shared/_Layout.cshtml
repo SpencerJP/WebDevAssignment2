@@ -37,7 +37,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a asp-area="" asp-controller="OwnerInventories" asp-action="Index">Owner Inventory</a></li>
-                            <li><a asp-area="" asp-controller="StockRequests" asp-action="Index">Stock Requests</a></li>
+                            <li><a asp-area="" asp-controller="ProcessStockRequests" asp-action="Index">Stock Requests</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -56,9 +56,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Page 1-1</a></li>
-                            <li><a href="#">Page 1-2</a></li>
-                            <li><a href="#">Page 1-3</a></li>
+                            <li><a asp-area="" asp-controller="ProductsController" asp-action="Index">Product</a></li>
                         </ul>
                     </li>
                 </ul>

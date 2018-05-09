@@ -1,0 +1,62 @@
+﻿@model IEnumerable<ASPNETAssignment.Models.StockRequestViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+
+                @Html.DisplayNameFor(model => model.sr.Store)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.sr.Product)
+            </th>
+            <th>
+
+                @Html.DisplayNameFor(model => model.sr.Quantity)
+            </th>
+            <th>
+                Owner Inventory Stock Level
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.sr.StockRequestID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sr.Store.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sr.Product.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sr.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.oi.StockLevel)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.sr.StockRequestID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.sr.StockRequestID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.sr.StockRequestID">Delete</a> |
+                <a asp-action="ProcessStockRequest" asp-route-id="@item.sr.StockRequestID">Process Stock Request</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

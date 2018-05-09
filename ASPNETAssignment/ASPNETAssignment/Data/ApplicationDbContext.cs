@@ -17,6 +17,7 @@ namespace ASPNETAssignment.Data
             public DbSet<Store> Store { get; set; }
             public DbSet<OwnerInventory> OwnerInventory { get; set; }
             public DbSet<StockRequest> StockRequest { get; set; }
+            public DbSet<StoreInventory> StoreInventory { get; set; }
             public DbSet<ShoppingCart> ShoppingCart { get; set; }
             public DbSet<Item> Item { get; set; }
 
@@ -26,6 +27,7 @@ namespace ASPNETAssignment.Data
 
             base.OnModelCreating(modelBuilder);
         }
+
 
     }
 }
