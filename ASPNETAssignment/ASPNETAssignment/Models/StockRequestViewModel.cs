@@ -7,13 +7,13 @@ namespace ASPNETAssignment.Models
 {
     public class StockRequestViewModel
     {
-        public StockRequest sr { get; set; }
-        public OwnerInventory oi { get; set; }
+        public StockRequest StockRequest { get; set; }
+        public OwnerInventory OwnerInventory { get; set; }
 
         public StockRequestViewModel(StockRequest p1, OwnerInventory p2)
         {
-            this.sr = p1;
-            this.oi = p2;
+            this.StockRequest = p1;
+            this.OwnerInventory = p2;
         }
 
     }
