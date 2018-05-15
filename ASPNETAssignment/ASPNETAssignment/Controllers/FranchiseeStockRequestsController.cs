@@ -16,17 +16,23 @@ namespace ASPNETAssignment.Controllers
     public class FranchiseeStockRequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private ApplicationUser currentUser;
 
         public FranchiseeStockRequestsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        private ApplicationUser GetUser()
+        {
+            string currentUserId = User.Identity.GetUserId();
+            return _context.Users.FirstOrDefault(x => x.Id == currentUserId);
+        }
+
         // GET: FranchiseeStockRequests
         public async Task<IActionResult> Index()
         {
-            string currentUserId = User.Identity.GetUserId();
-            var currentUser = _context.Users.FirstOrDefault(x => x.Id == currentUserId);
+            currentUser = GetUser();
             var stockRequests = (from a in (_context.StockRequest.Include(s => s.Product).Include(s => s.Store))
                                 where (a.StoreID == currentUser.StoreID)
                                 select a); // only returns this user's store's stock requests
@@ -36,6 +42,9 @@ namespace ASPNETAssignment.Controllers
         // GET: FranchiseeStockRequests/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            currentUser = GetUser();
+            string currentUserId = User.Identity.GetUserId();
+            currentUser = _context.Users.FirstOrDefault(x => x.Id == currentUserId);
             if (id == null)
             {
                 return NotFound();
@@ -49,6 +58,10 @@ namespace ASPNETAssignment.Controllers
             {
                 return NotFound();
             }
+            if (stockRequest.StoreID != currentUser.StoreID)
+            {
+                return NotFound();
+            }
 
             return View(stockRequest);
         }
@@ -57,7 +70,7 @@ namespace ASPNETAssignment.Controllers
         public IActionResult Create()
         {
             ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID");
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID");
+            //ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID");
             return View();
         }
 
@@ -66,7 +79,7 @@ namespace ASPNETAssignment.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StockRequestID,StoreID,ProductID,Quantity")] StockRequest stockRequest)
+        public async Task<IActionResult> Create([Bind("StockRequestID,ProductID,Quantity")] StockRequest stockRequest)
         {
             if (ModelState.IsValid)
             {
@@ -75,13 +88,14 @@ namespace ASPNETAssignment.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", stockRequest.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", stockRequest.StoreID);
+            //ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", stockRequest.StoreID);
             return View(stockRequest);
         }
 
         // GET: FranchiseeStockRequests/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            currentUser = GetUser();
             if (id == null)
             {
                 return NotFound();
@@ -89,6 +103,10 @@ namespace ASPNETAssignment.Controllers
 
             var stockRequest = await _context.StockRequest.SingleOrDefaultAsync(m => m.StockRequestID == id);
             if (stockRequest == null)
+            {
+                return NotFound();
+            }
+            if (stockRequest.StoreID != currentUser.StoreID)
             {
                 return NotFound();
             }
@@ -104,6 +122,7 @@ namespace ASPNETAssignment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("StockRequestID,StoreID,ProductID,Quantity")] StockRequest stockRequest)
         {
+            currentUser = GetUser();
             if (id != stockRequest.StockRequestID)
             {
                 return NotFound();
@@ -129,14 +148,19 @@ namespace ASPNETAssignment.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            if (stockRequest.StoreID != currentUser.StoreID)
+            {
+                return NotFound();
+            }
             ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", stockRequest.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", stockRequest.StoreID);
+            //ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", stockRequest.StoreID);
             return View(stockRequest);
         }
 
         // GET: FranchiseeStockRequests/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            currentUser = GetUser();
             if (id == null)
             {
                 return NotFound();
@@ -150,6 +174,10 @@ namespace ASPNETAssignment.Controllers
             {
                 return NotFound();
             }
+            if (stockRequest.StoreID != currentUser.StoreID)
+            {
+                return NotFound();
+            }
 
             return View(stockRequest);
         }
@@ -159,7 +187,12 @@ namespace ASPNETAssignment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            currentUser = GetUser();
             var stockRequest = await _context.StockRequest.SingleOrDefaultAsync(m => m.StockRequestID == id);
+            if (stockRequest.StoreID != currentUser.StoreID)
+            {
+                return NotFound();
+            }
             _context.StockRequest.Remove(stockRequest);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

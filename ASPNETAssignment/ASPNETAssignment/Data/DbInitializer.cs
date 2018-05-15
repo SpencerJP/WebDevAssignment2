@@ -10,7 +10,7 @@ namespace ASPNETAssignment.Data
         public static async Task InitializeAsync(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
 
-            // In Startup iam creating first Admin Role and creating a default Admin User    
+           
             bool x = await roleManager.RoleExistsAsync("Owner");
             if (x)
             {
