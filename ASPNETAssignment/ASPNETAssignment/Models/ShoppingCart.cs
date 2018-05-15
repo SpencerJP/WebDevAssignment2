@@ -9,8 +9,6 @@ namespace ASPNETAssignment.Models
     {
         public int ShoppingCartID { get; set; }
 
-        public ApplicationUser ApplicationUser { get; set; }
-
         public ICollection<Item> Item { get; } = new List<Item>();
     }
 }

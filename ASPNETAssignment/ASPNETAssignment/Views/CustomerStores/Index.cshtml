@@ -1,0 +1,30 @@
+﻿@model IEnumerable<ASPNETAssignment.Models.Store>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a asp-controller="CustomerProducts" asp-action="Index" asp-route-id="@item.StoreID">View Store Products</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
