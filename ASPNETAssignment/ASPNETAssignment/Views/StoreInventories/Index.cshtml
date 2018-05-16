@@ -6,9 +6,6 @@
 
 <h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -22,7 +19,6 @@
             <th>
                 Stock Level
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -37,11 +33,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StockLevel)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { storeID=item.StoreID, productID = item.ProductID }) |
-                @Html.ActionLink("Details", "Details", new { storeID = item.StoreID, productID = item.ProductID }) |
-                @Html.ActionLink("Delete", "Delete", new { storeID = item.StoreID, productID = item.ProductID })
             </td>
         </tr>
 }

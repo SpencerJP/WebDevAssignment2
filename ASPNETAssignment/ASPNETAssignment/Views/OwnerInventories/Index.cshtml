@@ -6,9 +6,6 @@
 
 <h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -32,8 +29,7 @@
                 @Html.DisplayFor(modelItem => item.StockLevel)
             </td>
             <td>
-                <a asp-action="SetStockLevel" asp-route-id="@item.ProductID">Set Stock Level</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductID">Details</a>
+                <a asp-action="SetStockLevel" asp-route-id="@item.ProductID">Set Stock Level</a>
             </td>
         </tr>
 }

@@ -6,18 +6,14 @@
 
 <h2>Create</h2>
 
-<h4>StockRequest</h4>
+<h4>Stock Request</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="StoreID" class="control-label"></label>
-                <select asp-for="StoreID" class ="form-control" asp-items="ViewBag.StoreID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductID" class="control-label"></label>
+                <label class="control-label">Product Name</label>
                 <select asp-for="ProductID" class ="form-control" asp-items="ViewBag.ProductID"></select>
             </div>
             <div class="form-group">

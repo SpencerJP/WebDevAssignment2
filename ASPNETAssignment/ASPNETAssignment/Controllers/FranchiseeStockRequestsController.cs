@@ -7,26 +7,27 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ASPNETAssignment.Data;
 using ASPNETAssignment.Models;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ASPNETAssignment.Controllers
-{
+{   
     [Authorize]
     public class FranchiseeStockRequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private ApplicationUser currentUser;
 
-        public FranchiseeStockRequestsController(ApplicationDbContext context)
+        public FranchiseeStockRequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         private ApplicationUser GetUser()
         {
-            string currentUserId = User.Identity.GetUserId();
-            return _context.Users.FirstOrDefault(x => x.Id == currentUserId);
+            return _userManager.GetUserAsync(HttpContext.User).Result;
         }
 
         // GET: FranchiseeStockRequests
@@ -43,12 +44,6 @@ namespace ASPNETAssignment.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             currentUser = GetUser();
-            string currentUserId = User.Identity.GetUserId();
-            currentUser = _context.Users.FirstOrDefault(x => x.Id == currentUserId);
-            if (id == null)
-            {
-                return NotFound();
-            }
 
             var stockRequest = await _context.StockRequest
                 .Include(s => s.Product)
@@ -67,10 +62,16 @@ namespace ASPNETAssignment.Controllers
         }
 
         // GET: FranchiseeStockRequests/Create
-        public IActionResult Create()
+        public IActionResult Create(int? productID)
         {
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID");
-            //ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID");
+            if (productID != null)
+            {
+                ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", 12);
+            }
+            else
+            {
+                ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name");
+            }
             return View();
         }
 
@@ -81,6 +82,14 @@ namespace ASPNETAssignment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("StockRequestID,ProductID,Quantity")] StockRequest stockRequest)
         {
+            var storeID = GetUser().StoreID;
+            if (storeID != null)
+            {
+                stockRequest.StoreID = (int) storeID;
+            } else
+            {
+                NotFound();
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(stockRequest);
@@ -88,7 +97,6 @@ namespace ASPNETAssignment.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", stockRequest.ProductID);
-            //ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", stockRequest.StoreID);
             return View(stockRequest);
         }
 

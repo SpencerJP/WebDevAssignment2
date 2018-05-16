@@ -11,7 +11,6 @@ using ASPNETAssignment.Models;
 
 namespace ASPNETAssignment.Controllers
 {
-    [Authorize]
     public class OwnerInventoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
