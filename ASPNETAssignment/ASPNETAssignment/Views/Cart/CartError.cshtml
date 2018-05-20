@@ -1,0 +1,11 @@
+﻿@model ASPNETAssignment.Models.ViewModels.CartErrorViewModel
+@{
+    ViewData["Title"] = "Cart Error";
+}
+
+<h2>Cart Error</h2>
+
+<p>Sorry! There is not enough stock available from @Model.StoreInventory.Store.Name to satisfy that many items of @Model.StoreInventory.Product.Name!</p>
+
+<a asp-area="" asp-controller="Cart" asp-action="Index">Back to Cart</a>
+

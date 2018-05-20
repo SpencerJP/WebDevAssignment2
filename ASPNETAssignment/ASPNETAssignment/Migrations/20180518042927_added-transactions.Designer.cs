@@ -11,9 +11,10 @@ using System;
 namespace ASPNETAssignment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180518042927_added-transactions")]
+    partial class addedtransactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,13 +153,15 @@ namespace ASPNETAssignment.Migrations
 
                     b.Property<string>("ItemsInTransaction");
 
-                    b.Property<string>("Time");
+                    b.Property<DateTime>("Time");
 
                     b.Property<decimal>("Total");
 
-                    b.Property<string>("UserEmail");
+                    b.Property<string>("UserId");
 
                     b.HasKey("TransactionID");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Transaction");
                 });
@@ -303,6 +306,13 @@ namespace ASPNETAssignment.Migrations
                         .WithMany("StoreInventory")
                         .HasForeignKey("StoreID")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ASPNETAssignment.Models.Transaction", b =>
+                {
+                    b.HasOne("ASPNETAssignment.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

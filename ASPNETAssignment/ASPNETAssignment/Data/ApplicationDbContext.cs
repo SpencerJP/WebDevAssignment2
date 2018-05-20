@@ -18,8 +18,7 @@ namespace ASPNETAssignment.Data
             public DbSet<OwnerInventory> OwnerInventory { get; set; }
             public DbSet<StockRequest> StockRequest { get; set; }
             public DbSet<StoreInventory> StoreInventory { get; set; }
-            public DbSet<ShoppingCart> ShoppingCart { get; set; }
-            public DbSet<Item> Item { get; set; }
+            public DbSet<Transaction> Transaction { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -11,6 +11,7 @@ using ASPNETAssignment.Models;
 
 namespace ASPNETAssignment.Controllers
 {
+    [Authorize(Roles = "Owner")]
     public class ProcessStockRequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -30,136 +31,12 @@ namespace ASPNETAssignment.Controllers
             return View(await aSPNetAssignmentContext.ToListAsync());
         }
 
-        // GET: StockRequests/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var stockRequest = await _context.StockRequest
-                .Include(s => s.Product)
-                .Include(s => s.Store)
-                .SingleOrDefaultAsync(m => m.StockRequestID == id);
-            if (stockRequest == null)
-            {
-                return NotFound();
-            }
-
-            return View(stockRequest);
-        }
-
-        // GET: StockRequests/Create
-        public IActionResult Create()
-        {
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID");
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID");
-            return View();
-        }
-
-        // POST: StockRequests/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StockRequestID,StoreID,ProductID,Quantity")] StockRequest stockRequest)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(stockRequest);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", stockRequest.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", stockRequest.StoreID);
-            return View(stockRequest);
-        }
-
-        // GET: StockRequests/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var stockRequest = await _context.StockRequest.SingleOrDefaultAsync(m => m.StockRequestID == id);
-            if (stockRequest == null)
-            {
-                return NotFound();
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", stockRequest.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", stockRequest.StoreID);
-            return View(stockRequest);
-        }
-
-
-
-        // POST: StockRequests/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StockRequestID,StoreID,ProductID,Quantity")] StockRequest stockRequest)
-        {
-            if (id != stockRequest.StockRequestID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(stockRequest);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StockRequestExists(stockRequest.StockRequestID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", stockRequest.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", stockRequest.StoreID);
-            return View(stockRequest);
-        }
-
-        // GET: StockRequests/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var stockRequest = await _context.StockRequest
-                .Include(s => s.Product)
-                .Include(s => s.Store)
-                .SingleOrDefaultAsync(m => m.StockRequestID == id);
-            if (stockRequest == null)
-            {
-                return NotFound();
-            }
-
-            return View(stockRequest);
-        }
-        // GET: StockRequests/Delete/5
         public async Task<IActionResult> ProcessStockRequest(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            ViewData["CanProcess"] = "You cannot process this request, not enough stock in the owner inventory.";
             var stockRequest = await _context.StockRequest
                 .Include(s => s.Product)
                 .Include(s => s.Store)
@@ -173,7 +50,6 @@ namespace ASPNETAssignment.Controllers
             }
             if (stockRequest.Quantity <= ownerInventory.StockLevel)
             {
-                ViewData["CanProcess"] = "Process a stock request.";
             }
             return View(stockRequest);
         }
@@ -199,19 +75,9 @@ namespace ASPNETAssignment.Controllers
             }
             else
             {
-                return NotFound(); // remove this, for now just leave it but return a proper error message
+                // return view showing that this request cannot work cos stock is too low
+                return View("ProcessError", new ProcessStockRequestErrorViewModel(stockRequest));
             }
-        }
-
-        // POST: StockRequests/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var stockRequest = await _context.StockRequest.SingleOrDefaultAsync(m => m.StockRequestID == id);
-            _context.StockRequest.Remove(stockRequest);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool StockRequestExists(int id)

@@ -14,7 +14,7 @@ namespace ASPNETAssignment.Models
         public int ProductID { get; set; }
         public Product Product { get; set; }
 
-        [Display(Name = "Stock Level")]
+        [Display(Name = "Stock Level"), Range(0, int.MaxValue, ErrorMessage = "Can't be negative!")]
         public int StockLevel { get; set; }
     }
 }

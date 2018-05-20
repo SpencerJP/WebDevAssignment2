@@ -11,9 +11,10 @@ using System;
 namespace ASPNETAssignment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180518045019_changed-transactions")]
+    partial class changedtransactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,11 +153,11 @@ namespace ASPNETAssignment.Migrations
 
                     b.Property<string>("ItemsInTransaction");
 
-                    b.Property<string>("Time");
+                    b.Property<DateTime>("Time");
 
                     b.Property<decimal>("Total");
 
-                    b.Property<string>("UserEmail");
+                    b.Property<string>("userEmail");
 
                     b.HasKey("TransactionID");
 

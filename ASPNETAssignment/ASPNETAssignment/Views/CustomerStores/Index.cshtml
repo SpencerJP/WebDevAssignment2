@@ -22,7 +22,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <a asp-controller="CustomerProducts" asp-action="Index" asp-route-id="@item.StoreID">View Store Products</a>
+                @Html.ActionLink("View Store Products", "Index", "CustomerProducts", new { storeID = item.StoreID })
             </td>
         </tr>
 }

@@ -1,0 +1,11 @@
+﻿@model ASPNETAssignment.Models.ProcessStockRequestErrorViewModel
+@{
+    ViewData["Title"] = "Process Stock Request Error";
+}
+
+<h2>Process Stock Request Error</h2>
+
+<p>Sorry! There is not enough stock available from the owner inventory to satisfy that many items of @Model.StockRequest.Product.Name!</p>
+
+<a asp-area="" asp-controller="ProcessStockRequests" asp-action="Index">Back to Index</a>
+

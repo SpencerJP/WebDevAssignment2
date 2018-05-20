@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ASPNETAssignment.Data
@@ -10,12 +11,23 @@ namespace ASPNETAssignment.Data
     public static class SeedData
     {
 
-        public static void InitializeProducts(IServiceProvider serviceProvider)
+        public static async Task InitializeProducts(IServiceProvider serviceProvider)
         {
             using (var context = new ApplicationDbContext(
-                serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
+                serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>())
+                )
+
             {
 
+                var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                if (context.Transaction.Any())
+                {
+                    return;
+                }
+                else
+                {
+                    await context.SaveChangesAsync();
+                }
             }
         }
 
@@ -34,14 +46,14 @@ namespace ASPNETAssignment.Data
             }
 
             var users = new[] { "testcustomer", "testowner", "testfranchisee" };
-            string password = "MyP@ssword1234!";
-            
+            //string password = "MyP@ssword1234!";
+            /*
             foreach (var user in users)
             {
                 var checkUser = userManager.FindByNameAsync(user);
                 try
                 {
-                    System.Diagnostics.Debug.WriteLine(checkUser.Result.UserName);  // for some reason checkUser == null is not working so this throws if check
+                    System.Diagnostics.Debug.WriteLine(checkUser.Result.UserName);  // for some reason checkUser == null is not working so this throws if checkUser is null
 
                 }
                 catch(Exception)
@@ -55,12 +67,12 @@ namespace ASPNETAssignment.Data
                     };
                     await userManager.CreateAsync(newUser, password);
                 }
-            }
+            } */
             
 
             await EnsureUserHasRole(userManager, "testcustomer@gmail.com", "Customer");
-            await EnsureUserHasRole(userManager, "testowner@example.com", "Owner");
-            await EnsureUserHasRole(userManager, "testfranchisee@rmit.edu.au", "FranchiseHolder");
+            await EnsureUserHasRole(userManager, "testowner@gmail.com", "Owner");
+            await EnsureUserHasRole(userManager, "testfranchisee@gmail.com", "FranchiseHolder");
         }
 
         private static async Task EnsureUserHasRole(

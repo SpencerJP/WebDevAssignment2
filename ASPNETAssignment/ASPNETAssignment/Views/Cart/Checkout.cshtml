@@ -1,0 +1,110 @@
+﻿@model ASPNETAssignment.Models.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<h2>Shopping Cart</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Store
+            </th>
+            <th>
+                Product
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Price of One
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ShoppingCartViewModel.ListOfItems)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Key.Store.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Key.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    $@Html.DisplayFor(modelItem => item.Key.Product.Price)
+                </td>
+                <td>
+                    @Html.ActionLink("Remove From Cart", "RemoveFromCart", new { storeID = item.Key.StoreID, productID = item.Key.ProductID })
+                </td>
+            </tr>
+        }
+        <tr><td>Subtotal: $@Model.ShoppingCartViewModel.GetTotal()</td></tr>
+        <tr><td>Shipping: $15</td></tr>
+        <tr><td>Total: $@Model.ShoppingCartViewModel.GetTotal(15)</td></tr>
+    </tbody>
+</table>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="ShoppingCartViewModel" />
+    <style type="text/css">
+        table th {
+            font-weight: bold;
+            font-size: 150%;
+        }
+
+        table td {
+            padding-right: 50px;
+        }
+    </style>
+    <br />
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreditCardType, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @foreach (CardType cardType in Enum.GetValues(typeof(CardType)))
+                {
+                    if (cardType == CardType.Unknown)
+                    {
+                        continue;
+                    }
+
+                    if (cardType == Model.CreditCardType)
+                    {
+                        @Html.RadioButtonFor(model => model.CreditCardType, (int)cardType, new { id = String.Empty, @checked = "checked" })
+                    }
+                    else
+                    {
+                        @Html.RadioButtonFor(model => model.CreditCardType, (int)cardType, new { id = String.Empty })
+                    }
+                    <span style="margin-left: 5px;">@cardType</span>
+                    <br />
+                }
+                @Html.ValidationMessageFor(model => model.CreditCardType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreditCardNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CreditCardNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CreditCardNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Pay" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}

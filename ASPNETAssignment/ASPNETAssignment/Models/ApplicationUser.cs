@@ -12,6 +12,5 @@ namespace ASPNETAssignment.Models
     public class ApplicationUser : IdentityUser
     {
         public int? StoreID { get; set; }
-        public int? ShoppingCartID { get; set; }
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ASPNETAssignment.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "FranchiseHolder")]
     public class StoreInventoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -29,7 +29,7 @@ namespace ASPNETAssignment.Controllers
         {
             var currentUser = _userManager.GetUserAsync(HttpContext.User).Result;
             var applicationDbContext = from a in (_context.StoreInventory.Include(s => s.Product).Include(s => s.Store))
-                                       where a.StoreID == currentUser.StoreID select a;
+                                       where a.StoreID == currentUser.StoreID select a; // only show items from this user's store
 
             return View(await applicationDbContext.ToListAsync());
         }

@@ -11,9 +11,10 @@ using System;
 namespace ASPNETAssignment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180516072937_removed-shopping-cart")]
+    partial class removedshoppingcart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,24 +144,6 @@ namespace ASPNETAssignment.Migrations
                     b.HasIndex("ProductID");
 
                     b.ToTable("StoreInventory");
-                });
-
-            modelBuilder.Entity("ASPNETAssignment.Models.Transaction", b =>
-                {
-                    b.Property<int>("TransactionID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ItemsInTransaction");
-
-                    b.Property<string>("Time");
-
-                    b.Property<decimal>("Total");
-
-                    b.Property<string>("UserEmail");
-
-                    b.HasKey("TransactionID");
-
-                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

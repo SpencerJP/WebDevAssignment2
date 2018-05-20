@@ -11,6 +11,7 @@ using ASPNETAssignment.Models;
 
 namespace ASPNETAssignment.Controllers
 {
+    [Authorize(Roles = "Owner")]
     public class OwnerInventoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,32 +26,6 @@ namespace ASPNETAssignment.Controllers
         {
             var aSPNetAssignmentContext = _context.OwnerInventory.Include(o => o.Product);
             return View(await aSPNetAssignmentContext.ToListAsync());
-        }
-
-        // GET: OwnerInventories/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var ownerInventory = await _context.OwnerInventory
-                .Include(o => o.Product)
-                .SingleOrDefaultAsync(m => m.ProductID == id);
-            if (ownerInventory == null)
-            {
-                return NotFound();
-            }
-
-            return View(ownerInventory);
-        }
-
-        // GET: OwnerInventories/Create
-        public IActionResult Create()
-        {
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID");
-            return View();
         }
 
         // POST: OwnerInventories/Create
@@ -121,36 +96,6 @@ namespace ASPNETAssignment.Controllers
             }
             ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", ownerInventory.ProductID);
             return View(ownerInventory);
-        }
-
-        // GET: OwnerInventories/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var ownerInventory = await _context.OwnerInventory
-                .Include(o => o.Product)
-                .SingleOrDefaultAsync(m => m.ProductID == id);
-            if (ownerInventory == null)
-            {
-                return NotFound();
-            }
-
-            return View(ownerInventory);
-        }
-
-        // POST: OwnerInventories/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var ownerInventory = await _context.OwnerInventory.SingleOrDefaultAsync(m => m.ProductID == id);
-            _context.OwnerInventory.Remove(ownerInventory);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool OwnerInventoryExists(int id)

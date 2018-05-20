@@ -23,6 +23,7 @@ namespace ASPNETAssignment
 
                 try
                 {
+                    SeedData.InitializeProducts(services).Wait();
                     SeedData.InitializeRolesAndUsers(services).Wait();
                 }
                 catch (Exception ex)

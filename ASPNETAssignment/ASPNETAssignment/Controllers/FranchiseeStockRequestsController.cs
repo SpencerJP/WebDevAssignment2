@@ -11,8 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace ASPNETAssignment.Controllers
-{   
-    [Authorize]
+{
+    [Authorize(Roles = "FranchiseHolder")]
     public class FranchiseeStockRequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -26,7 +26,7 @@ namespace ASPNETAssignment.Controllers
         }
 
         private ApplicationUser GetUser()
-        {
+        { // quick function to get current user
             return _userManager.GetUserAsync(HttpContext.User).Result;
         }
 
@@ -40,26 +40,6 @@ namespace ASPNETAssignment.Controllers
             return View(await stockRequests.ToListAsync());
         }
 
-        // GET: FranchiseeStockRequests/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            currentUser = GetUser();
-
-            var stockRequest = await _context.StockRequest
-                .Include(s => s.Product)
-                .Include(s => s.Store)
-                .SingleOrDefaultAsync(m => m.StockRequestID == id);
-            if (stockRequest == null)
-            {
-                return NotFound();
-            }
-            if (stockRequest.StoreID != currentUser.StoreID)
-            {
-                return NotFound();
-            }
-
-            return View(stockRequest);
-        }
 
         // GET: FranchiseeStockRequests/Create
         public IActionResult Create(int? productID)
@@ -100,70 +80,7 @@ namespace ASPNETAssignment.Controllers
             return View(stockRequest);
         }
 
-        // GET: FranchiseeStockRequests/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            currentUser = GetUser();
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var stockRequest = await _context.StockRequest.SingleOrDefaultAsync(m => m.StockRequestID == id);
-            if (stockRequest == null)
-            {
-                return NotFound();
-            }
-            if (stockRequest.StoreID != currentUser.StoreID)
-            {
-                return NotFound();
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", stockRequest.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", stockRequest.StoreID);
-            return View(stockRequest);
-        }
-
-        // POST: FranchiseeStockRequests/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StockRequestID,StoreID,ProductID,Quantity")] StockRequest stockRequest)
-        {
-            currentUser = GetUser();
-            if (id != stockRequest.StockRequestID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(stockRequest);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StockRequestExists(stockRequest.StockRequestID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            if (stockRequest.StoreID != currentUser.StoreID)
-            {
-                return NotFound();
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", stockRequest.ProductID);
-            //ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", stockRequest.StoreID);
-            return View(stockRequest);
-        }
+ 
 
         // GET: FranchiseeStockRequests/Delete/5
         public async Task<IActionResult> Delete(int? id)
